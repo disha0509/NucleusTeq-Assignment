@@ -1,0 +1,118 @@
+body {
+font-family:'Poppins',sans-serif;
+text-align:center;
+background:linear-gradient(135deg, #1E3C72, #2A5298);
+color:#fff;
+padding:20px;
+}
+
+
+.game-container {
+max-width:500px;
+margin:50px auto;
+background:#b3e6ff;
+padding:25px;
+border-radius:15px;
+box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+
+
+h1.neon-text {
+font-size:42px;
+font-weight: 900;
+color:#fff;
+text-transform: uppercase;
+letter-spacing: 4px;
+text-shadow: 0 0 5px #0033cc, 0 0 10px #0033cc, 0 0 20px #0033cc;
+}
+
+
+
+.players {
+display:flex;
+justify-content:space-around;
+margin-bottom:20px;
+}
+
+.player {
+background: #f0f0f0;
+padding:15px;
+border-radius:10px;
+transition: 0.3s;
+box-shadow:0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.player.active {
+background:linear-gradient(45deg, #ffcc33, #ff9933);
+font-weight: bold;
+transform:scale(1.08);
+box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+.dice-container {
+margin: 20px 0;
+}
+
+#dice-image {
+width: 120px;
+transition: transform 0.3s ease-in-out;
+}
+
+
+
+
+.mainButton button {
+margin: 10px;
+padding: 12px 25px;
+font-size: 16px;
+cursor:pointer;
+border:none;
+border-radius: 8px;
+font-weight: bold;
+transition: 0.3s;
+box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+#roll-dice {
+background:linear-gradient(135deg, #ff7eb3, #ff758c);
+color: white;
+}
+
+#roll-dice:hover {
+  background: linear-gradient(135deg, #ff6a98, #ff5c85);
+}
+
+
+#save-score {
+background: linear-gradient(135deg, #28A745, #218838);
+color:white;
+}
+
+#save-score:hover {
+background: linear-gradient(135deg, #23963b, #1e7e34);
+}
+
+
+#reset-game {
+background:linear-gradient(135deg, #DC3545, #C82333);
+color:white;
+}
+
+#reset-game:hover {
+background:linear-gradient(135deg, #b52a3a, #a01d2a);
+}
+
+
+
+
+#winner-message {
+font-size:24px;
+font-weight:bold;
+margin-top:20px;
+color: #ffcc00;
+transition: 0.5s;
+text-shadow: 2px 2px 10px rgba(255, 204, 0, 0.8);
+}
