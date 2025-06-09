@@ -7,7 +7,7 @@ from app.utils.util import hash_password
 from typing import List
 #from app.models.users import PasswordResetToken
 #from app.schemas.usersS import ForgotPassword, ResetPassword
-#from app.utils.utils import hash_password, generate_reset_token
+#from app.utils.util import hash_password, generate_reset_token
 from datetime import datetime
 
 router = APIRouter()
@@ -21,3 +21,5 @@ def signup(user: UserSignup,db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+
