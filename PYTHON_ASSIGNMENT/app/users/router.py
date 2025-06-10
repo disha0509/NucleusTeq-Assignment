@@ -1,12 +1,15 @@
 from fastapi import FastAPI, HTTPException, Depends, status, APIRouter
-from app.schemas.userSchema import UserSignup, UserOut
+from fastapi.security import OAuth2PasswordRequestForm
+from app.products import models
+from app.users.schema import UserSignup, UserOut
 from sqlalchemy.orm import Session
 from app.database.database import get_db
-from app.models.users import User
+from app.users.models import User
+from app.utils import oauth2, util
 from app.utils.util import hash_password
 from typing import List
-from app.models.users import PasswordResetToken
-from app.schemas.userSchema import ForgotPassword, ResetPassword
+from app.users.models import PasswordResetToken
+from app.users.schema import ForgotPassword, ResetPassword
 from app.utils.util import hash_password, generate_reset_token
 from datetime import datetime
 
@@ -21,6 +24,30 @@ def signup(user: UserSignup,db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+
+
+@router.post("/login")
+def login(user_credentials:  OAuth2PasswordRequestForm=Depends(), db:  Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == user_credentials.username).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    if not util.verify_password(user_credentials.password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Incorrect password"
+        )
+    
+    access_token = oauth2.create_access_token(data={"user_id": user.id})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+
+
+
 
 @router.get("/getAllUsers", response_model=List[UserOut])
 def get_all_users(db:Session = Depends(get_db)):
@@ -62,3 +89,4 @@ def secure_reset_password(request: ResetPassword, db: Session = Depends(get_db))
     db.commit()
 
     return {"message": "Password successfully reset"}
+
