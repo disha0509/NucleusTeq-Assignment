@@ -81,11 +81,10 @@ def secure_forgot_password(request: ForgotPassword, db: Session = Depends(get_db
     db.commit()
 
     sender = "bundeladisha05@gmail.com"
-    password = "mfvj nthd oduz qttq"
     receiver = user.email
     receiver_name = user.name
     reset_token = reset_token.token
-    sending_email_with_token(sender=sender,password=password,receiver=receiver,reset_token=reset_token,receiver_name=receiver_name)
+    sending_email_with_token(sender=sender,receiver=receiver,reset_token=reset_token,receiver_name=receiver_name)
 
 
 

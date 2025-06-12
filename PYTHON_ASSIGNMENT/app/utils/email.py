@@ -1,9 +1,15 @@
+import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from fastapi import HTTPException,status
+from dotenv import load_dotenv
 
-def sending_email_with_token(sender,password,receiver,reset_token,receiver_name):
+load_dotenv()
+
+def sending_email_with_token(sender,receiver,reset_token,receiver_name):
+
+    password = os.getenv("EMAIL_PASSWORD")
 
     subject_line = "Password Reset Token for E-commerce login"
     

@@ -21,3 +21,13 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 2025-06-12 17:27:10,117 | INFO | ecommerce | Password reset attempt with token: 93d3bebf-7f69-4f09-814e-5358a5e5c0fc
 2025-06-12 17:27:10,353 | INFO | ecommerce | Password updated for user 5
 2025-06-12 17:27:10,369 | INFO | ecommerce | Reset token invalidated for user 5
+2025-06-13 01:31:21,895 | INFO | ecommerce | Password reset requested for email: dishabundela05@gmail.com
+2025-06-13 01:31:26,569 | INFO | ecommerce | Reset token created for user 5
+2025-06-13 01:31:52,286 | INFO | ecommerce | Password reset attempt with token: 31a4c1e3-9560-488f-ab21-65e3b132b8ad
+2025-06-13 01:31:52,290 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-13 01:31:52,573 | INFO | ecommerce | Password updated for user 5
+2025-06-13 01:31:52,586 | INFO | ecommerce | Reset token invalidated for user 5
