@@ -5,6 +5,7 @@ from app.cart.models import Cart
 from app.products.models import Product
 from app.order.models import Order, OrderItem
 from app.utils.oauth2 import get_current_user
+from app.logging_config import logger
 
 router = APIRouter(tags=["checkout"])
 
@@ -13,14 +14,17 @@ def checkout(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    logger.info(f"User {current_user.id} initiated checkout")
     cart_items = db.query(Cart).filter(Cart.user_id == current_user.id).all()
     if not cart_items:
+        logger.warning(f"Checkout failed: Cart is empty for user {current_user.id}")
         raise HTTPException(status_code=400, detail="Cart is empty")
     total = 0
     order_items = []
     for item in cart_items:
         product = db.query(Product).filter(Product.id == item.product_id).first()
         if not product:
+            logger.warning(f"Product {item.product_id} not found during checkout for user {current_user.id}")
             continue
         subtotal = product.price * item.quantity
         total += subtotal
@@ -34,4 +38,5 @@ def checkout(
     db.query(Cart).filter(Cart.user_id == current_user.id).delete()
     db.commit()
     db.refresh(order)
+    logger.info(f"Order {order.id} created for user {current_user.id} with total {total}")
     return {"order_id": order.id, "total": total, "status": "paid"}

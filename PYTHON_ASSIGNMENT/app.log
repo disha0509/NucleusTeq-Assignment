@@ -1,0 +1,23 @@
+2025-06-11 18:34:40,935 | INFO | ecommerce | Public product detail for ID: 3
+2025-06-11 18:35:11,948 | INFO | ecommerce | Public product detail for ID: 6
+2025-06-11 18:35:11,948 | WARNING | ecommerce | Public product with ID 6 not found
+2025-06-11 18:35:21,616 | INFO | ecommerce | Public product detail for ID: 2
+2025-06-12 17:02:18,410 | INFO | ecommerce | Public product listing: category=disha, min_price=120.0, max_price=9000.0, sort_by=id, page=1, page_size=10
+2025-06-12 17:02:54,539 | INFO | ecommerce | Public product search: keyword=dihsa
+2025-06-12 17:03:06,573 | INFO | ecommerce | Public product listing: category=electronics, min_price=120.0, max_price=9000.0, sort_by=id, page=1, page_size=10
+2025-06-12 17:04:57,042 | INFO | ecommerce | Public product listing: category=Electronics, min_price=120.0, max_price=9000.0, sort_by=id, page=1, page_size=10
+2025-06-12 17:09:07,522 | INFO | ecommerce | Public product listing: category=disha, min_price=120.0, max_price=9000.0, sort_by=id, page=1, page_size=10
+2025-06-12 17:09:07,544 | WARNING | ecommerce | Category 'disha' not found in products
+2025-06-12 17:09:22,117 | INFO | ecommerce | Public product listing: category=Electronics, min_price=120.0, max_price=9000.0, sort_by=id, page=1, page_size=10
+2025-06-12 17:25:36,234 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-12 17:25:36,545 | INFO | ecommerce | Signup attempt for email: dishabundela05@gmail.com
+2025-06-12 17:25:36,581 | INFO | ecommerce | User created: 5
+2025-06-12 17:26:05,328 | INFO | ecommerce | Password reset requested for email: dishabundela05@gmail.com
+2025-06-12 17:26:09,221 | INFO | ecommerce | Reset token created for user 5
+2025-06-12 17:27:10,117 | INFO | ecommerce | Password reset attempt with token: 93d3bebf-7f69-4f09-814e-5358a5e5c0fc
+2025-06-12 17:27:10,353 | INFO | ecommerce | Password updated for user 5
+2025-06-12 17:27:10,369 | INFO | ecommerce | Reset token invalidated for user 5
