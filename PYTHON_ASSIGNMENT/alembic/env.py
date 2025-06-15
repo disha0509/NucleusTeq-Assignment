@@ -4,6 +4,11 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 import sys
 from alembic import context
+from app.cart import models
+from app.order import models
+from app.products import models
+from app.users import models
+
 
 from app.database.database import Base
 

@@ -18,7 +18,27 @@ from app.logging_config import logger
 
 router = APIRouter()
 @router.post("/signup", response_model=UserOut, status_code=status.HTTP_201_CREATED)
-def signup(user: UserSignup,db: Session = Depends(get_db)):
+def signup(user: UserSignup,db: Session = Depends(get_db))-> UserOut:
+    """
+    Register a new user.
+
+    Args:
+        user (UserSignup): User signup data.
+        db (Session): Database session.
+
+    Returns:
+        UserOut: The created user.
+
+    Raises:
+        HTTPException: If the email already exists.
+    """
+    existing_user = db.query(User).filter(User.email == user.email).first()
+    if existing_user:
+        logger.warning(f"Signup failed: Email already exists for {user.email}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already exists."
+        )
     user_data = user.dict()
     user_data["password"] = hash_password(user_data["password"])
     logger.info(f"Signup attempt for email: {user.email}")
@@ -33,7 +53,20 @@ def signup(user: UserSignup,db: Session = Depends(get_db)):
 
 
 @router.post("/login")
-def login(user_credentials:  OAuth2PasswordRequestForm=Depends(), db:  Session = Depends(get_db)):
+def login(user_credentials:  OAuth2PasswordRequestForm=Depends(), db:  Session = Depends(get_db))-> dict:
+    """
+    Authenticate a user and return an access token.
+
+    Args:
+        user_credentials (OAuth2PasswordRequestForm): User login credentials.
+        db (Session): Database session.
+
+    Returns:
+        dict: Access token and token type.
+
+    Raises:
+        HTTPException: If user is not found or password is incorrect.
+    """
     logger.info(f"Login attempt for username: {user_credentials.username}")
     user = db.query(User).filter(User.email == user_credentials.username).first()
     if not user:
@@ -55,9 +88,20 @@ def login(user_credentials:  OAuth2PasswordRequestForm=Depends(), db:  Session =
 
 
 
-
 @router.get("/getAllUsers", response_model=List[UserOut])
-def get_all_users(db:Session = Depends(get_db)):
+def get_all_users(db:Session = Depends(get_db))-> List[UserOut]:
+    """
+    Retrieve all users.
+
+    Args:
+        db (Session): Database session.
+
+    Returns:
+        List[UserOut]: List of all users.
+
+    Raises:
+        HTTPException: If no users are found.
+    """
     logger.info("Fetching all users")
     users = db.query(User).all()
     if not users:
@@ -68,7 +112,20 @@ def get_all_users(db:Session = Depends(get_db)):
 
 
 @router.post("/forgot-password")
-def secure_forgot_password(request: ForgotPassword, db: Session = Depends(get_db)):
+def secure_forgot_password(request: ForgotPassword, db: Session = Depends(get_db))-> dict:
+    """
+    Generate and send a password reset token to the user's email.
+
+    Args:
+        request (ForgotPassword): Email for password reset.
+        db (Session): Database session.
+
+    Returns:
+        dict: Message and reset token.
+
+    Raises:
+        HTTPException: If user is not found.
+    """
     logger.info(f"Password reset requested for email: {request.email}")
     user = db.query(User).filter(User.email == request.email).first()
     if not user:
@@ -93,7 +150,20 @@ def secure_forgot_password(request: ForgotPassword, db: Session = Depends(get_db
 
 
 @router.post("/reset-password")
-def secure_reset_password(request: ResetPassword, db: Session = Depends(get_db)):
+def secure_reset_password(request: ResetPassword, db: Session = Depends(get_db))-> dict:
+    """
+    Reset the user's password using a valid reset token.
+
+    Args:
+        request (ResetPassword): Token and new password.
+        db (Session): Database session.
+
+    Returns:
+        dict: Success message.
+
+    Raises:
+        HTTPException: If token is invalid/expired or user not found.
+    """
     logger.info(f"Password reset attempt with token: {request.token}")
     token_entry = db.query(PasswordResetToken).filter(PasswordResetToken.token == request.token).first()
 

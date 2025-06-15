@@ -31,3 +31,72 @@ Traceback (most recent call last):
 AttributeError: module 'bcrypt' has no attribute '__about__'
 2025-06-13 01:31:52,573 | INFO | ecommerce | Password updated for user 5
 2025-06-13 01:31:52,586 | INFO | ecommerce | Reset token invalidated for user 5
+2025-06-13 16:55:55,874 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-13 16:55:56,231 | INFO | ecommerce | Signup attempt for email: anshima@example.com
+2025-06-13 16:55:56,304 | INFO | ecommerce | User created: 6
+2025-06-13 17:12:34,786 | INFO | ecommerce | Fetching all users
+2025-06-13 17:12:34,818 | INFO | ecommerce | Found 5 users
+2025-06-13 17:14:07,097 | INFO | ecommerce | Login attempt for username: admin@example.com
+2025-06-13 17:14:07,107 | WARNING | ecommerce | Login failed: User not found for admin@example.com
+2025-06-13 17:18:07,780 | INFO | ecommerce | Login attempt for username: admin@example.com
+2025-06-13 17:18:07,837 | WARNING | ecommerce | Login failed: User not found for admin@example.com
+2025-06-13 17:18:19,540 | INFO | ecommerce | Login attempt for username: admin05@example.com
+2025-06-13 17:18:19,545 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-13 17:18:19,845 | INFO | ecommerce | Login successful for user 3
+2025-06-13 17:18:56,755 | INFO | ecommerce | Admin 3 creating product: Smart LED Bulb
+2025-06-13 17:18:56,780 | INFO | ecommerce | Product created with ID: 6
+2025-06-13 17:19:13,850 | INFO | ecommerce | Admin 3 creating product: Portable Charger
+2025-06-13 17:19:13,855 | INFO | ecommerce | Product created with ID: 7
+2025-06-13 17:19:33,799 | INFO | ecommerce | Admin 3 creating product: Mini Projector
+2025-06-13 17:19:33,802 | INFO | ecommerce | Product created with ID: 8
+2025-06-13 17:19:49,533 | INFO | ecommerce | Admin 3 creating product: Gaming Keyboard
+2025-06-13 17:19:49,539 | INFO | ecommerce | Product created with ID: 9
+2025-06-13 17:20:11,486 | INFO | ecommerce | Login attempt for username: anshima@example.com
+2025-06-13 17:20:11,716 | INFO | ecommerce | Login successful for user 6
+2025-06-13 17:20:38,493 | INFO | ecommerce | User 6 adding product 5 (qty 4) to cart
+2025-06-13 17:20:38,508 | INFO | ecommerce | Added new product 5 to user 6's cart
+2025-06-13 17:21:24,349 | INFO | ecommerce | User 6 adding product 4 (qty 4) to cart
+2025-06-13 17:21:24,351 | INFO | ecommerce | Added new product 4 to user 6's cart
+2025-06-13 17:21:32,732 | INFO | ecommerce | User 6 adding product 6 (qty 2) to cart
+2025-06-13 17:21:32,734 | INFO | ecommerce | Added new product 6 to user 6's cart
+2025-06-13 17:21:42,980 | INFO | ecommerce | User 6 adding product 8 (qty 1) to cart
+2025-06-13 17:21:42,981 | INFO | ecommerce | Added new product 8 to user 6's cart
+2025-06-13 17:21:55,649 | INFO | ecommerce | User 6 adding product 9 (qty 1) to cart
+2025-06-13 17:21:55,651 | INFO | ecommerce | Added new product 9 to user 6's cart
+2025-06-13 17:22:11,328 | INFO | ecommerce | User 6 initiated checkout
+2025-06-13 17:22:11,427 | INFO | ecommerce | Order 2 created for user 6 with total 8792.0
+2025-06-13 17:22:28,230 | INFO | ecommerce | User 6 requested order history
+2025-06-13 17:22:28,234 | INFO | ecommerce | Found 1 orders for user 6
+2025-06-13 17:23:13,892 | INFO | ecommerce | Login attempt for username: admin05@example.com
+2025-06-13 17:23:14,143 | INFO | ecommerce | Login successful for user 3
+2025-06-13 17:23:44,707 | INFO | ecommerce | Admin 3 deleting product ID: 9
+2025-06-13 17:29:27,339 | INFO | ecommerce | Admin 3 deleting product ID: 9
+2025-06-13 17:30:57,265 | INFO | ecommerce | Admin 3 deleting product ID: 9
+2025-06-13 17:31:18,831 | INFO | ecommerce | Admin 3 deleting product ID: 9
+2025-06-13 17:36:38,084 | INFO | ecommerce | Admin 3 deleting product ID: 9
+2025-06-13 17:53:45,576 | INFO | ecommerce | Login attempt for username: admin05@example.com
+2025-06-13 17:53:45,595 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-13 17:53:45,852 | INFO | ecommerce | Login successful for user 3
+2025-06-13 17:54:00,753 | INFO | ecommerce | Admin 3 deleting product ID: 9
+2025-06-13 17:54:00,777 | INFO | ecommerce | Product ID 9 deleted
+2025-06-13 23:32:12,132 | INFO | ecommerce | Password reset requested for email: dishabundela05@gmail.com
+2025-06-13 23:32:16,047 | INFO | ecommerce | Reset token created for user 5
+2025-06-14 00:16:53,597 | INFO | ecommerce | Login attempt for username: anjali@example.com
+2025-06-14 00:16:53,619 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-14 00:16:53,935 | INFO | ecommerce | Login successful for user 4

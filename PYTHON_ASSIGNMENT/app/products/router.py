@@ -14,9 +14,20 @@ def create_product(
     product: ProductCreate,
     db: Session = Depends(get_db),
     admin=Depends(admin_required)
-):
+) -> ProductOut:
+    """
+    Create a new product as an admin.
+
+    Args:
+        product (ProductCreate): Product data to create.
+        db (Session): Database session.
+        admin: The currently authenticated admin.
+
+    Returns:
+        ProductOut: The created product.
+    """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} creating product: {product.name}")
-    new_product = Product(**product.dict())
+    new_product = Product(**product.dict(), created_by=admin.id)
     db.add(new_product)
     db.commit()
     db.refresh(new_product)
@@ -29,7 +40,19 @@ def read_products(
     limit: int = Query(10, ge=1, le=100, description="Max number of items to return"),
     db: Session = Depends(get_db),
     admin=Depends(admin_required)
-):
+) -> List[ProductOut]:
+    """
+    Retrieve a list of products for admin.
+
+    Args:
+        skip (int): Number of items to skip.
+        limit (int): Max number of items to return.
+        db (Session): Database session.
+        admin: The currently authenticated admin.
+
+    Returns:
+        List[ProductOut]: List of products.
+    """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} reading products: skip={skip}, limit={limit}")
     products = db.query(Product).offset(skip).limit(limit).all()
     return products
@@ -40,7 +63,21 @@ def read_product_detail(
     id: int,
     db: Session = Depends(get_db),
     admin=Depends(admin_required)
-):
+)-> ProductOut:
+    """
+    Retrieve details of a specific product by ID for admin.
+
+    Args:
+        id (int): Product ID.
+        db (Session): Database session.
+        admin: The currently authenticated admin.
+
+    Returns:
+        ProductOut: The product details.
+
+    Raises:
+        HTTPException: If the product is not found.
+    """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} reading product detail for ID: {id}")
     product = db.query(Product).filter(Product.id == id).first()
     if not product:
@@ -57,12 +94,29 @@ def update_product(
     product_update: ProductCreate,
     db: Session = Depends(get_db),
     admin=Depends(admin_required)
-):
+)-> ProductOut:
+    """
+    Update an existing product as an admin.
+
+    Args:
+        id (int): Product ID.
+        product_update (ProductCreate): Updated product data.
+        db (Session): Database session.
+        admin: The currently authenticated admin.
+
+    Returns:
+        ProductOut: The updated product.
+
+    Raises:
+        HTTPException: If the product is not found.
+    """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} updating product ID: {id}")
     product = db.query(Product).filter(Product.id == id).first()
     if not product:
         logger.warning(f"Product with ID {id} not found for update")
         raise HTTPException(status_code=404, detail="Product not found")
+    #if product.created_by != admin.id:
+    #   raise HTTPException(status_code=403, detail="You can only update products you created.")
     for key, value in product_update.dict().items():
         setattr(product, key, value)
     db.commit()
@@ -75,12 +129,28 @@ def delete_product(
     id: int,
     db: Session = Depends(get_db),
     admin=Depends(admin_required)
-):
+) -> None:
+    """
+    Delete a product as an admin.
+
+    Args:
+        id (int): Product ID.
+        db (Session): Database session.
+        admin: The currently authenticated admin.
+
+    Returns:
+        None
+
+    Raises:
+        HTTPException: If the product is not found.
+    """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} deleting product ID: {id}")
     product = db.query(Product).filter(Product.id == id).first()
     if not product:
         logger.warning(f"Product with ID {id} not found for deletion")
         raise HTTPException(status_code=404, detail="Product not found")
+    #if product.created_by != admin.id:
+    #   raise HTTPException(status_code=403, detail="You can only delete products you created.")
     db.delete(product)
     db.commit()
     logger.info(f"Product ID {id} deleted")
@@ -98,7 +168,22 @@ def public_product_listing(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
     db: Session = Depends(get_db)
-):
+) -> List[ProductOut]:
+    """
+    Public endpoint to list products with optional filters and pagination.
+
+    Args:
+        category (str, optional): Filter by category.
+        min_price (float, optional): Minimum price filter.
+        max_price (float, optional): Maximum price filter.
+        sort_by (str): Field to sort by.
+        page (int): Page number.
+        page_size (int): Number of items per page.
+        db (Session): Database session.
+
+    Returns:
+        List[ProductOut]: List of products.
+    """
     logger.info(f"Public product listing: category={category}, min_price={min_price}, max_price={max_price}, sort_by={sort_by}, page={page}, page_size={page_size}")
     query = db.query(Product)
     if category:
@@ -119,7 +204,20 @@ def public_product_listing(
 def public_product_search(
     keyword: str = Query(..., min_length=1),
     db: Session = Depends(get_db)
-):
+) -> List[ProductOut]:
+    """
+    Public endpoint to search products by keyword in name or description.
+
+    Args:
+        keyword (str): Search keyword.
+        db (Session): Database session.
+
+    Returns:
+        List[ProductOut]: List of matching products.
+
+    Raises:
+        HTTPException: If no products are found.
+    """
     logger.info(f"Public product search: keyword={keyword}")
     products = db.query(Product).filter(
         (Product.name.ilike(f"%{keyword}%")) | (Product.description.ilike(f"%{keyword}%"))
@@ -133,7 +231,20 @@ def public_product_search(
 def public_product_detail(
     id: int,
     db: Session = Depends(get_db)
-):
+) -> ProductOut:
+    """
+    Public endpoint to get product details by ID.
+
+    Args:
+        id (int): Product ID.
+        db (Session): Database session.
+
+    Returns:
+        ProductOut: The product details.
+
+    Raises:
+        HTTPException: If the product is not found.
+    """
     logger.info(f"Public product detail for ID: {id}")
     product = db.query(Product).filter(Product.id == id).first()
     if not product:

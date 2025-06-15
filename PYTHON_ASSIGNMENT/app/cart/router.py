@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database.database import get_db
@@ -13,7 +14,18 @@ def add_to_cart(
     cart_item: CartAdd,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
-):
+) -> CartOut:
+    """
+    Add a product to the user's cart or update quantity if it already exists.
+
+    Args:
+        cart_item (CartAdd): Product and quantity to add.
+        db (Session): Database session.
+        current_user: The currently authenticated user.
+
+    Returns:
+        CartOut: The updated or newly created cart item.
+    """
     logger.info(f"User {current_user.id} adding product {cart_item.product_id} (qty {cart_item.quantity}) to cart")
     cart = db.query(Cart).filter(
         Cart.user_id == current_user.id,
@@ -34,7 +46,17 @@ def add_to_cart(
 def view_cart(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
-):
+)-> List[CartOut]:
+    """
+    Retrieve all items in the current user's cart.
+
+    Args:
+        db (Session): Database session.
+        current_user: The currently authenticated user.
+
+    Returns:
+        List[CartOut]: List of cart items for the user.
+    """
     logger.info(f"User {current_user.id} viewing cart")
     return db.query(Cart).filter(Cart.user_id == current_user.id).all()
 
@@ -43,7 +65,18 @@ def remove_from_cart(
     product_id: int,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
-):
+) -> None:
+    """
+    Remove a product from the user's cart.
+
+    Args:
+        product_id (int): ID of the product to remove.
+        db (Session): Database session.
+        current_user: The currently authenticated user.
+
+    Returns:
+        None
+    """
     logger.info(f"User {current_user.id} removing product {product_id} from cart")
     cart = db.query(Cart).filter(
         Cart.user_id == current_user.id,
@@ -63,7 +96,19 @@ def update_quantity(
     cart_item: CartAdd,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
-):
+) -> CartOut:
+    """
+    Update the quantity of a product in the user's cart.
+
+    Args:
+        product_id (int): ID of the product to update.
+        cart_item (CartAdd): New quantity for the product.
+        db (Session): Database session.
+        current_user: The currently authenticated user.
+
+    Returns:
+        CartOut: The updated cart item.
+    """
     logger.info(f"User {current_user.id} updating quantity for product {product_id} to {cart_item.quantity}")
     cart = db.query(Cart).filter(
         Cart.user_id == current_user.id,

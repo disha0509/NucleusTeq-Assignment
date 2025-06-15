@@ -1,8 +1,8 @@
-"""Initial migration
+"""Add ondelete CASCADE to order_items.product_id
 
-Revision ID: 0d5bcae4f81d
-Revises: 
-Create Date: 2025-06-12 02:33:32.693518
+Revision ID: e6c9fb616fe9
+Revises: 0d5bcae4f81d
+Create Date: 2025-06-13 17:35:08.819149
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '0d5bcae4f81d'
-down_revision: Union[str, None] = None
+revision: str = 'e6c9fb616fe9'
+down_revision: Union[str, None] = '0d5bcae4f81d'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -32,5 +32,4 @@ def downgrade() -> None:
         'order_items_product_id_fkey',
         'order_items', 'products',
         ['product_id'], ['id']
-    # ### end Alembic commands ###
-    )
+        )    # ### end Alembic commands ###
