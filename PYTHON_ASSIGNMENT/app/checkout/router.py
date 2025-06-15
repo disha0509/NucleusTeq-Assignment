@@ -1,3 +1,4 @@
+from typing import Dict
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database.database import get_db
@@ -13,7 +14,20 @@ router = APIRouter(tags=["checkout"])
 def checkout(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
-):
+)-> Dict[str, object]:
+    """
+    Process the checkout for the current user.
+
+    Retrieves all items in the user's cart, creates an order with order items,
+    clears the cart, and returns the order summary.
+
+    Args:
+        db (Session): Database session.
+        current_user: The currently authenticated user.
+
+    Returns:
+        dict: Contains order ID, total amount, and status.
+    """
     logger.info(f"User {current_user.id} initiated checkout")
     cart_items = db.query(Cart).filter(Cart.user_id == current_user.id).all()
     if not cart_items:
@@ -23,9 +37,12 @@ def checkout(
     order_items = []
     for item in cart_items:
         product = db.query(Product).filter(Product.id == item.product_id).first()
-        if not product:
-            logger.warning(f"Product {item.product_id} not found during checkout for user {current_user.id}")
-            continue
+        if not product or product.is_deleted:
+            logger.warning(f"Product {item.product_id} is deleted or not found during checkout for user {current_user.id}")
+            raise HTTPException(
+                status_code=400,
+                detail=f"Product with id {item.product_id} is not available for checkout."
+            )
         subtotal = product.price * item.quantity
         total += subtotal
         order_items.append(OrderItem(

@@ -5,6 +5,7 @@ from app.database.database import get_db
 from app.cart.models import Cart
 from app.cart.schema import CartAdd, CartOut
 from app.utils.oauth2 import get_current_user
+from app.products.models import Product
 from app.logging_config import logger
 
 router = APIRouter(tags=["cart"])
@@ -17,15 +18,11 @@ def add_to_cart(
 ) -> CartOut:
     """
     Add a product to the user's cart or update quantity if it already exists.
-
-    Args:
-        cart_item (CartAdd): Product and quantity to add.
-        db (Session): Database session.
-        current_user: The currently authenticated user.
-
-    Returns:
-        CartOut: The updated or newly created cart item.
     """
+    product = db.query(Product).filter(Product.id == cart_item.product_id).first()
+    if not product or product.is_deleted:
+        logger.warning(f"Attempt to add deleted or non-existent product {cart_item.product_id} to cart by user {current_user.id}")
+        raise HTTPException(status_code=400, detail="Product is not available.")
     logger.info(f"User {current_user.id} adding product {cart_item.product_id} (qty {cart_item.quantity}) to cart")
     cart = db.query(Cart).filter(
         Cart.user_id == current_user.id,
@@ -65,18 +62,16 @@ def remove_from_cart(
     product_id: int,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
-) -> None:
+):
     """
+    
     Remove a product from the user's cart.
 
-    Args:
-        product_id (int): ID of the product to remove.
-        db (Session): Database session.
-        current_user: The currently authenticated user.
-
-    Returns:
-        None
     """
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product or product.is_deleted:
+        logger.warning(f"Attempt to delete deleted or non-existent product {product_id} from cart by user {current_user.id}")
+        raise HTTPException(status_code=400, detail="Product is not available.")
     logger.info(f"User {current_user.id} removing product {product_id} from cart")
     cart = db.query(Cart).filter(
         Cart.user_id == current_user.id,
@@ -88,7 +83,7 @@ def remove_from_cart(
     db.delete(cart)
     db.commit()
     logger.info(f"Product {product_id} removed from user {current_user.id}'s cart")
-    return
+    return {"message": "cart deleted sucessfully"}
 
 @router.put("/{product_id}", response_model=CartOut)
 def update_quantity(
@@ -99,16 +94,13 @@ def update_quantity(
 ) -> CartOut:
     """
     Update the quantity of a product in the user's cart.
-
-    Args:
-        product_id (int): ID of the product to update.
-        cart_item (CartAdd): New quantity for the product.
-        db (Session): Database session.
-        current_user: The currently authenticated user.
-
-    Returns:
-        CartOut: The updated cart item.
     """
+
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product or product.is_deleted:
+        logger.warning(f"Attempt to update deleted or non-existent product {product_id} in cart by user {current_user.id}")
+        raise HTTPException(status_code=400, detail="Product is not available.")
+
     logger.info(f"User {current_user.id} updating quantity for product {product_id} to {cart_item.quantity}")
     cart = db.query(Cart).filter(
         Cart.user_id == current_user.id,

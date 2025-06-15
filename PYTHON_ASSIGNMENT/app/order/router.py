@@ -17,12 +17,6 @@ def order_history(
     """
     Retrieve the order history for the current user.
 
-    Args:
-        db (Session): Database session.
-        current_user: The currently authenticated user.
-
-    Returns:
-        List[OrderOut]: List of orders for the user.
     """
     logger.info(f"User {current_user.id} requested order history")
     orders = db.query(Order).filter(Order.user_id == current_user.id).all()
@@ -38,16 +32,6 @@ def order_detail(
     """
     Retrieve the details of a specific order for the current user.
 
-    Args:
-        order_id (int): ID of the order to retrieve.
-        db (Session): Database session.
-        current_user: The currently authenticated user.
-
-    Returns:
-        OrderOut: The order details.
-
-    Raises:
-        HTTPException: If the order is not found for the user.
     """
     logger.info(f"User {current_user.id} requested details for order {order_id}")
     order = db.query(Order).filter(Order.id == order_id, Order.user_id == current_user.id).first()

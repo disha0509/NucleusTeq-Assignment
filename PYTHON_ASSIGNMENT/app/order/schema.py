@@ -6,9 +6,10 @@ class OrderItemOut(BaseModel):
     product_id: int
     quantity: int
     price_at_purchase: float
+    is_deleted : bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class OrderOut(BaseModel):
     id: int
@@ -18,4 +19,4 @@ class OrderOut(BaseModel):
     items: List[OrderItemOut]
 
     class Config:
-        orm_mode = True
+        from_attributes = True

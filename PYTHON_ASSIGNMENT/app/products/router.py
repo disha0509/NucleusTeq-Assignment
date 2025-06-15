@@ -18,13 +18,6 @@ def create_product(
     """
     Create a new product as an admin.
 
-    Args:
-        product (ProductCreate): Product data to create.
-        db (Session): Database session.
-        admin: The currently authenticated admin.
-
-    Returns:
-        ProductOut: The created product.
     """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} creating product: {product.name}")
     new_product = Product(**product.dict(), created_by=admin.id)
@@ -44,17 +37,11 @@ def read_products(
     """
     Retrieve a list of products for admin.
 
-    Args:
-        skip (int): Number of items to skip.
-        limit (int): Max number of items to return.
-        db (Session): Database session.
-        admin: The currently authenticated admin.
-
-    Returns:
-        List[ProductOut]: List of products.
     """
+    
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} reading products: skip={skip}, limit={limit}")
-    products = db.query(Product).offset(skip).limit(limit).all()
+
+    products = db.query(Product).filter(Product.is_deleted == False).offset(skip).limit(limit).all()
     return products
 
 @router.get("/{product_id}", response_model=ProductOut)
@@ -84,6 +71,9 @@ def read_product_detail(
         from fastapi import HTTPException
         logger.warning(f"Product with ID {id} not found")
         raise HTTPException(status_code=404, detail="Product not found")
+    if product.is_deleted:
+        logger.warning(f"Product with ID {id} is deleted")
+        raise HTTPException(status_code=404, detail="Product not found")
     return product
 
 from fastapi import HTTPException
@@ -98,25 +88,14 @@ def update_product(
     """
     Update an existing product as an admin.
 
-    Args:
-        id (int): Product ID.
-        product_update (ProductCreate): Updated product data.
-        db (Session): Database session.
-        admin: The currently authenticated admin.
-
-    Returns:
-        ProductOut: The updated product.
-
-    Raises:
-        HTTPException: If the product is not found.
     """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} updating product ID: {id}")
     product = db.query(Product).filter(Product.id == id).first()
-    if not product:
-        logger.warning(f"Product with ID {id} not found for update")
+    if not product or product.is_deleted:
+        logger.warning(f"Product with ID {id} not found or is deleted for update")
         raise HTTPException(status_code=404, detail="Product not found")
-    #if product.created_by != admin.id:
-    #   raise HTTPException(status_code=403, detail="You can only update products you created.")
+    if product.created_by != admin.id:
+        raise HTTPException(status_code=403, detail="You can only update products you created.")
     for key, value in product_update.dict().items():
         setattr(product, key, value)
     db.commit()
@@ -124,37 +103,27 @@ def update_product(
     logger.info(f"Product ID {id} updated")
     return product
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_200_OK)
 def delete_product(
     id: int,
     db: Session = Depends(get_db),
     admin=Depends(admin_required)
-) -> None:
+):
     """
     Delete a product as an admin.
 
-    Args:
-        id (int): Product ID.
-        db (Session): Database session.
-        admin: The currently authenticated admin.
-
-    Returns:
-        None
-
-    Raises:
-        HTTPException: If the product is not found.
     """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} deleting product ID: {id}")
     product = db.query(Product).filter(Product.id == id).first()
-    if not product:
-        logger.warning(f"Product with ID {id} not found for deletion")
+    if not product or product.is_deleted:
+        logger.warning(f"Product with ID {id} not found for deletion or is already deleted")
         raise HTTPException(status_code=404, detail="Product not found")
-    #if product.created_by != admin.id:
-    #   raise HTTPException(status_code=403, detail="You can only delete products you created.")
-    db.delete(product)
+    if product.created_by != admin.id:
+        raise HTTPException(status_code=403, detail="You can only delete products you created.")
+    product.is_deleted = True
     db.commit()
     logger.info(f"Product ID {id} deleted")
-    return
+    return {"detail": "Product deleted successfully"}
 
 public_router = APIRouter()
 
@@ -172,23 +141,12 @@ def public_product_listing(
     """
     Public endpoint to list products with optional filters and pagination.
 
-    Args:
-        category (str, optional): Filter by category.
-        min_price (float, optional): Minimum price filter.
-        max_price (float, optional): Maximum price filter.
-        sort_by (str): Field to sort by.
-        page (int): Page number.
-        page_size (int): Number of items per page.
-        db (Session): Database session.
-
-    Returns:
-        List[ProductOut]: List of products.
     """
     logger.info(f"Public product listing: category={category}, min_price={min_price}, max_price={max_price}, sort_by={sort_by}, page={page}, page_size={page_size}")
-    query = db.query(Product)
+    query = db.query(Product).filter(Product.is_deleted == False)  # Filter out deleted products
     if category:
         query = query.filter(Product.category == category)
-        if not db.query(Product).filter(Product.category == category).first():
+        if not db.query(Product).filter(Product.category == category, Product.is_deleted==False).first():
             logger.warning(f"Category '{category}' not found in products")
             raise HTTPException(status_code=404, detail=f"Category '{category}' not found")
     if min_price is not None:
@@ -208,19 +166,11 @@ def public_product_search(
     """
     Public endpoint to search products by keyword in name or description.
 
-    Args:
-        keyword (str): Search keyword.
-        db (Session): Database session.
-
-    Returns:
-        List[ProductOut]: List of matching products.
-
-    Raises:
-        HTTPException: If no products are found.
     """
     logger.info(f"Public product search: keyword={keyword}")
     products = db.query(Product).filter(
-        (Product.name.ilike(f"%{keyword}%")) | (Product.description.ilike(f"%{keyword}%"))
+        (Product.name.ilike(f"%{keyword}%")) | (Product.description.ilike(f"%{keyword}%")) &
+        (Product.is_deleted == False)  # Filter out deleted products
     ).all()
     if not products:  # <-- ADDED
         logger.warning(f"No products found for keyword '{keyword}'")
@@ -235,18 +185,9 @@ def public_product_detail(
     """
     Public endpoint to get product details by ID.
 
-    Args:
-        id (int): Product ID.
-        db (Session): Database session.
-
-    Returns:
-        ProductOut: The product details.
-
-    Raises:
-        HTTPException: If the product is not found.
     """
     logger.info(f"Public product detail for ID: {id}")
-    product = db.query(Product).filter(Product.id == id).first()
+    product = db.query(Product).filter(Product.id == id, Product.is_deleted==False).first()
     if not product:
         from fastapi import HTTPException
         logger.warning(f"Public product with ID {id} not found")

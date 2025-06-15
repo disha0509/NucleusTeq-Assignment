@@ -16,7 +16,9 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
     role = Column(Enum(UserRole), default=UserRole.user)
+    cart_items = relationship("Cart", back_populates="user", cascade="all, delete-orphan")
     products = relationship("Product", back_populates="creator", cascade="all, delete")
+    
 
 class PasswordResetToken(Base):
     __tablename__ = "password_reset_tokens"

@@ -100,3 +100,85 @@ Traceback (most recent call last):
     version = _bcrypt.__about__.__version__
 AttributeError: module 'bcrypt' has no attribute '__about__'
 2025-06-14 00:16:53,935 | INFO | ecommerce | Login successful for user 4
+2025-06-15 18:12:37,868 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-15 18:12:38,313 | INFO | ecommerce | Signup attempt for email: admin2@example.com
+2025-06-15 18:12:38,341 | INFO | ecommerce | User created: 7
+2025-06-15 18:13:02,887 | INFO | ecommerce | Login attempt for username: admin2@example.com
+2025-06-15 18:13:03,240 | INFO | ecommerce | Login successful for user 7
+2025-06-15 18:13:48,619 | INFO | ecommerce | Admin 7 updating product ID: 11
+2025-06-15 18:14:11,678 | INFO | ecommerce | Admin 7 deleting product ID: 11
+2025-06-16 00:12:50,617 | INFO | ecommerce | Login attempt for username: admin05@example.com
+2025-06-16 00:13:04,984 | INFO | ecommerce | Login attempt for username: admin05@example.com
+2025-06-16 00:13:05,807 | INFO | ecommerce | Login attempt for username: admin05@example.com
+2025-06-16 00:13:18,447 | INFO | ecommerce | Login attempt for username: admin2@example.com
+2025-06-16 00:17:59,109 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-16 00:17:59,377 | INFO | ecommerce | Signup attempt for email: isha@example.com
+2025-06-16 00:17:59,402 | INFO | ecommerce | User created: 8
+2025-06-16 00:18:08,004 | INFO | ecommerce | Login attempt for username: admin2@example.com
+2025-06-16 00:18:08,359 | INFO | ecommerce | Login successful for user 7
+2025-06-16 00:18:27,482 | INFO | ecommerce | Password reset requested for email: dishabundela05@gmail.com
+2025-06-16 00:18:41,070 | INFO | ecommerce | Fetching all users
+2025-06-16 00:18:41,074 | INFO | ecommerce | Found 7 users
+2025-06-16 00:18:53,352 | INFO | ecommerce | Password reset requested for email: dishabundela05@gmail.com
+2025-06-16 00:21:29,609 | INFO | ecommerce | Password reset requested for email: dishabundela05@gmail.com
+2025-06-16 00:21:50,338 | INFO | ecommerce | Password reset requested for email: dishabundela05@gmail.com
+2025-06-16 00:21:54,153 | INFO | ecommerce | Reset token created for user 5
+2025-06-16 00:22:30,191 | INFO | ecommerce | Password reset attempt with token: d1cb2d2a-22ba-4f72-b7e1-521ffab3e615
+2025-06-16 00:22:30,206 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-16 00:22:30,481 | INFO | ecommerce | Password updated for user 5
+2025-06-16 00:22:30,513 | INFO | ecommerce | Reset token invalidated for user 5
+2025-06-16 00:23:00,152 | INFO | ecommerce | Admin 7 creating product: Gaming Keyboard
+2025-06-16 00:23:00,178 | INFO | ecommerce | Product created with ID: 14
+2025-06-16 00:23:36,123 | INFO | ecommerce | Admin 7 creating product: Gaming light
+2025-06-16 00:23:36,127 | INFO | ecommerce | Product created with ID: 15
+2025-06-16 00:23:47,065 | INFO | ecommerce | Admin 7 reading products: skip=0, limit=10
+2025-06-16 00:24:05,481 | INFO | ecommerce | Admin 7 updating product ID: 11
+2025-06-16 00:24:41,710 | INFO | ecommerce | Admin 7 updating product ID: 15
+2025-06-16 00:24:41,724 | INFO | ecommerce | Product ID 15 updated
+2025-06-16 00:25:07,108 | INFO | ecommerce | Admin 7 deleting product ID: 11
+2025-06-16 00:25:11,987 | INFO | ecommerce | Admin 7 deleting product ID: 14
+2025-06-16 00:25:11,992 | INFO | ecommerce | Product ID 14 deleted
+2025-06-16 00:25:20,466 | INFO | ecommerce | Public product listing: category=Electronics, min_price=120.0, max_price=9000.0, sort_by=id, page=1, page_size=10
+2025-06-16 00:25:33,291 | INFO | ecommerce | Public product search: keyword=gaming
+2025-06-16 00:25:40,671 | INFO | ecommerce | Public product detail for ID: 5
+2025-06-16 00:25:40,677 | WARNING | ecommerce | Public product with ID 5 not found
+2025-06-16 00:25:46,134 | INFO | ecommerce | Public product detail for ID: 10
+2025-06-16 00:25:49,282 | INFO | ecommerce | Public product detail for ID: 12
+2025-06-16 00:25:53,131 | INFO | ecommerce | Public product detail for ID: 14
+2025-06-16 00:25:53,134 | WARNING | ecommerce | Public product with ID 14 not found
+2025-06-16 00:26:34,999 | INFO | ecommerce | Login attempt for username: isha@example.com
+2025-06-16 00:26:35,281 | INFO | ecommerce | Login successful for user 8
+2025-06-16 00:26:55,151 | INFO | ecommerce | User 7 adding product 10 (qty 1) to cart
+2025-06-16 00:26:55,166 | INFO | ecommerce | Added new product 10 to user 7's cart
+2025-06-16 00:27:00,917 | WARNING | ecommerce | Attempt to add deleted or non-existent product 14 to cart by user 7
+2025-06-16 00:27:11,887 | INFO | ecommerce | User 7 adding product 12 (qty 2) to cart
+2025-06-16 00:27:11,888 | INFO | ecommerce | Added new product 12 to user 7's cart
+2025-06-16 00:27:26,826 | INFO | ecommerce | User 7 viewing cart
+2025-06-16 00:27:47,898 | INFO | ecommerce | User 7 initiated checkout
+2025-06-16 00:27:48,002 | INFO | ecommerce | Order 3 created for user 7 with total 4697.0
+2025-06-16 00:27:58,262 | INFO | ecommerce | User 7 requested order history
+2025-06-16 00:27:58,266 | INFO | ecommerce | Found 1 orders for user 7
+2025-06-16 00:28:28,075 | INFO | ecommerce | User 7 requested details for order 12
+2025-06-16 00:28:28,089 | WARNING | ecommerce | Order 12 not found for user 7
+2025-06-16 00:28:32,938 | INFO | ecommerce | User 7 requested details for order 7
+2025-06-16 00:28:32,940 | WARNING | ecommerce | Order 7 not found for user 7
+2025-06-16 00:28:44,756 | INFO | ecommerce | User 7 requested details for order 10
+2025-06-16 00:28:44,758 | WARNING | ecommerce | Order 10 not found for user 7
+2025-06-16 00:28:50,594 | INFO | ecommerce | User 7 requested details for order 12
+2025-06-16 00:28:50,596 | WARNING | ecommerce | Order 12 not found for user 7
+2025-06-16 00:29:47,643 | INFO | ecommerce | User 7 requested details for order 3
+2025-06-16 00:29:47,651 | INFO | ecommerce | Order 3 details returned for user 7
+2025-06-16 00:29:58,589 | INFO | ecommerce | User 7 requested details for order 1
+2025-06-16 00:29:58,591 | WARNING | ecommerce | Order 1 not found for user 7

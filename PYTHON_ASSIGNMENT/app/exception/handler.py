@@ -1,4 +1,5 @@
-from fastapi import HTTPException, Request, logger
+from fastapi import HTTPException, Request
+from app.logging_config import logger
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.status import HTTP_400_BAD_REQUEST
