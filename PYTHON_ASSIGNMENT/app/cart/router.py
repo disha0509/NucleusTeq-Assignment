@@ -66,7 +66,7 @@ def remove_from_cart(
     """
     
     Remove a product from the user's cart.
-
+    
     """
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product or product.is_deleted:

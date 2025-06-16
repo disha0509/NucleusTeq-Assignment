@@ -182,3 +182,50 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 2025-06-16 00:29:47,651 | INFO | ecommerce | Order 3 details returned for user 7
 2025-06-16 00:29:58,589 | INFO | ecommerce | User 7 requested details for order 1
 2025-06-16 00:29:58,591 | WARNING | ecommerce | Order 1 not found for user 7
+2025-06-16 18:25:06,607 | WARNING | passlib.handlers.bcrypt | (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\disha\OneDrive\Documents\Python_Assignment\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-06-16 18:25:06,871 | INFO | ecommerce | Signup attempt for email: Diksha@example.com
+2025-06-16 18:25:06,916 | INFO | ecommerce | User created: 9
+2025-06-16 18:25:45,078 | INFO | ecommerce | Login attempt for username: Diksha@example.com
+2025-06-16 18:25:45,396 | INFO | ecommerce | Login successful for user 9
+2025-06-16 18:26:04,646 | INFO | ecommerce | Password reset requested for email: dishabundela05@gmail.com
+2025-06-16 18:26:09,044 | INFO | ecommerce | Reset token created for user 5
+2025-06-16 18:26:48,096 | INFO | ecommerce | Password reset attempt with token: d1cb2d2a-22ba-4f72-b7e1-521ffab3e615
+2025-06-16 18:26:48,100 | WARNING | ecommerce | Invalid or expired token used: d1cb2d2a-22ba-4f72-b7e1-521ffab3e615
+2025-06-16 18:27:07,041 | INFO | ecommerce | Password reset attempt with token: ad3d843a-60c2-41a3-85ea-c35ed2cd3279
+2025-06-16 18:27:07,277 | INFO | ecommerce | Password updated for user 5
+2025-06-16 18:27:07,292 | INFO | ecommerce | Reset token invalidated for user 5
+2025-06-16 18:27:36,333 | INFO | ecommerce | Login attempt for username: admin2@example.com
+2025-06-16 18:27:36,552 | INFO | ecommerce | Login successful for user 7
+2025-06-16 18:29:02,862 | INFO | ecommerce | Admin 7 creating product: laptop skin
+2025-06-16 18:29:02,879 | INFO | ecommerce | Product created with ID: 16
+2025-06-16 18:29:42,673 | INFO | ecommerce | Admin 7 reading products: skip=0, limit=10
+2025-06-16 18:30:47,942 | INFO | ecommerce | Admin 7 updating product ID: 15
+2025-06-16 18:30:47,944 | INFO | ecommerce | Product ID 15 updated
+2025-06-16 18:31:50,524 | INFO | ecommerce | Admin 7 deleting product ID: 16
+2025-06-16 18:31:50,528 | INFO | ecommerce | Product ID 16 deleted
+2025-06-16 18:32:05,187 | INFO | ecommerce | Public product listing: category=Electronics, min_price=120.0, max_price=9000.0, sort_by=id, page=1, page_size=10
+2025-06-16 18:32:24,660 | INFO | ecommerce | Public product search: keyword=gaming
+2025-06-16 18:32:38,919 | INFO | ecommerce | Public product detail for ID: 14
+2025-06-16 18:32:38,925 | WARNING | ecommerce | Public product with ID 14 not found
+2025-06-16 18:32:42,280 | INFO | ecommerce | Public product detail for ID: 14
+2025-06-16 18:32:42,281 | WARNING | ecommerce | Public product with ID 14 not found
+2025-06-16 18:32:49,600 | INFO | ecommerce | Admin 7 reading products: skip=0, limit=10
+2025-06-16 18:33:01,346 | INFO | ecommerce | Public product detail for ID: 15
+2025-06-16 18:33:28,736 | INFO | ecommerce | Login attempt for username: Diksha@example.com
+2025-06-16 18:33:28,957 | INFO | ecommerce | Login successful for user 9
+2025-06-16 18:33:49,146 | INFO | ecommerce | User 9 adding product 12 (qty 2) to cart
+2025-06-16 18:33:49,179 | INFO | ecommerce | Added new product 12 to user 9's cart
+2025-06-16 18:34:41,286 | INFO | ecommerce | User 9 viewing cart
+2025-06-16 18:35:04,580 | WARNING | ecommerce | Attempt to update deleted or non-existent product 2 in cart by user 9
+2025-06-16 18:35:15,689 | INFO | ecommerce | User 9 updating quantity for product 12 to 5
+2025-06-16 18:36:11,515 | INFO | ecommerce | User 9 initiated checkout
+2025-06-16 18:36:11,572 | INFO | ecommerce | Order 4 created for user 9 with total 9995.0
+2025-06-16 18:36:28,680 | INFO | ecommerce | User 9 requested order history
+2025-06-16 18:36:28,683 | INFO | ecommerce | Found 1 orders for user 9
+2025-06-16 18:36:54,808 | INFO | ecommerce | User 9 requested details for order 4
+2025-06-16 18:36:54,812 | INFO | ecommerce | Order 4 details returned for user 9
+2025-06-16 19:31:26,116 | WARNING | ecommerce | Signup failed: Email already exists for Diksha@example.com

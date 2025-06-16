@@ -18,15 +18,6 @@ def checkout(
     """
     Process the checkout for the current user.
 
-    Retrieves all items in the user's cart, creates an order with order items,
-    clears the cart, and returns the order summary.
-
-    Args:
-        db (Session): Database session.
-        current_user: The currently authenticated user.
-
-    Returns:
-        dict: Contains order ID, total amount, and status.
     """
     logger.info(f"User {current_user.id} initiated checkout")
     cart_items = db.query(Cart).filter(Cart.user_id == current_user.id).all()
@@ -43,6 +34,12 @@ def checkout(
                 status_code=400,
                 detail=f"Product with id {item.product_id} is not available for checkout."
             )
+        if item.quantity > product.stock:
+            logger.warning(f"Insufficient stock for product {product.id} (requested: {item.quantity}, available: {product.stock})")
+            raise HTTPException(
+                status_code=400,
+                detail=f"Insufficient stock for product '{product.name}'. Available: {product.stock}, Requested: {item.quantity}"
+            )
         subtotal = product.price * item.quantity
         total += subtotal
         order_items.append(OrderItem(
@@ -50,6 +47,9 @@ def checkout(
             quantity=item.quantity,
             price_at_purchase=product.price
         ))
+        for item in cart_items:
+            product = db.query(Product).filter(Product.id == item.product_id).first()
+            product.stock -= item.quantity
     order = Order(user_id=current_user.id, total_amount=total, status="paid", items=order_items)
     db.add(order)
     db.query(Cart).filter(Cart.user_id == current_user.id).delete()
