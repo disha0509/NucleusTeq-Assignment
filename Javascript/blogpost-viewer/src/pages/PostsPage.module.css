@@ -1,0 +1,57 @@
+.bgGradient {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027 0%, #2c5364 50%, #36d1c4 100%);
+  overflow-y: hidden; 
+}
+
+.centered {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: row; /* Stack children vertically */
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.loadingText {
+  font-size: 1.25rem;
+  color: #2c5364;
+}
+
+.wrapper {
+  max-width: 85rem;
+  margin: 2rem auto;
+  background: rgba(255,255,255,0.97);
+  border-radius: 2rem;
+  box-shadow: 0 10px 32px 0 rgba(44, 83, 100, 0.15);
+}
+
+.heading {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #0f2027;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+    padding: 3rem;
+  }
+  
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #36d1c4;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
