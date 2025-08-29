@@ -4,6 +4,8 @@ from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
+#used to hash the password
 def hash_password(password: str) -> str:
     """
     Hash a plain text password using bcrypt.
@@ -16,6 +18,7 @@ def hash_password(password: str) -> str:
     """
     return pwd_context.hash(password)
 
+#used to verify the password
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     Verify a plain text password against a hashed password.
@@ -29,6 +32,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     return pwd_context.verify(plain_password, hashed_password)
 
+#used to generate a unique password reset token
 def generate_reset_token(expiry_minutes=15) -> tuple[str, datetime]:
     """
     Generate a unique password reset token and its expiration time.

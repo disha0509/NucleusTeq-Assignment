@@ -8,6 +8,7 @@ class UserRole(str, enum.Enum):
     admin = "admin"
     user = "user"
 
+#create table named User
 class User(Base):
     __tablename__ = "users"
 
@@ -16,10 +17,13 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
     role = Column(Enum(UserRole), default=UserRole.user)
+
+    
     cart_items = relationship("Cart", back_populates="user", cascade="all, delete-orphan")
     products = relationship("Product", back_populates="creator", cascade="all, delete")
     
 
+# Create a table for password reset tokens
 class PasswordResetToken(Base):
     __tablename__ = "password_reset_tokens"
 

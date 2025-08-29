@@ -10,6 +10,7 @@ from app.logging_config import logger
 
 router = APIRouter(tags=["cart"])
 
+# Add the product to the user's cart
 @router.post("/", response_model=CartOut)
 def add_to_cart(
     cart_item: CartAdd,
@@ -20,6 +21,7 @@ def add_to_cart(
     Add a product to the user's cart or update quantity if it already exists.
     """
     product = db.query(Product).filter(Product.id == cart_item.product_id).first()
+    # Check if the product exists and is not deleted
     if not product or product.is_deleted:
         logger.warning(f"Attempt to add deleted or non-existent product {cart_item.product_id} to cart by user {current_user.id}")
         raise HTTPException(status_code=400, detail="Product is not available.")
@@ -28,6 +30,7 @@ def add_to_cart(
         Cart.user_id == current_user.id,
         Cart.product_id == cart_item.product_id
     ).first()
+    # If the product is already in the cart, update the quantity
     if cart:
         cart.quantity += cart_item.quantity
         logger.info(f"Updated quantity for product {cart_item.product_id} in user {current_user.id}'s cart")
@@ -39,6 +42,8 @@ def add_to_cart(
     db.refresh(cart)
     return cart
 
+
+# Retrieve all items in the user's cart
 @router.get("/", response_model=list[CartOut])
 def view_cart(
     db: Session = Depends(get_db),
@@ -57,6 +62,8 @@ def view_cart(
     logger.info(f"User {current_user.id} viewing cart")
     return db.query(Cart).filter(Cart.user_id == current_user.id).all()
 
+
+# Remove a product from the user's cart
 @router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_from_cart(
     product_id: int,
@@ -85,6 +92,8 @@ def remove_from_cart(
     logger.info(f"Product {product_id} removed from user {current_user.id}'s cart")
     return {"message": "cart deleted sucessfully"}
 
+
+# Update the quantity of a product in the user's cart
 @router.put("/{product_id}", response_model=CartOut)
 def update_quantity(
     product_id: int,

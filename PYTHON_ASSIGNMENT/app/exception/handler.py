@@ -32,6 +32,25 @@ async def custom_validation_exception_handler(request: Request,exc: RequestValid
         loc = error.get("loc", [])
         msg = error.get("msg", "Invalid input.")
         
+        if "username" in loc:
+            return JSONResponse(
+                status_code=HTTP_400_BAD_REQUEST,
+                content={
+                    "error": True,
+                    "message": "Invalid username format.",
+                    "code": HTTP_400_BAD_REQUEST
+                }
+            )
+        if "password" in loc:
+            return JSONResponse(
+                status_code=HTTP_400_BAD_REQUEST,
+                content={
+                    "error": True,
+                    "message": "Password must be at least 8 characters long.",
+                    "code": HTTP_400_BAD_REQUEST
+                }
+            )
+
         # ✅ Specific case for email
         if "email" in loc:
             return JSONResponse(

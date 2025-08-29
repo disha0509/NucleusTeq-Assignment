@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def sending_email_with_token(sender,receiver,reset_token,receiver_name):
-
+    # Function to send an email with the password reset token
     password = os.getenv("EMAIL_PASSWORD")
 
     subject_line = "Password Reset Token for E-commerce login"
@@ -29,16 +29,16 @@ If you did not request a password reset, you can safely ignore this email.
 Thank you,
 E-commerce Support Team
 """
-
+    # Create the email message
     msg  = MIMEMultipart()
-
+    # Set up the email parameters
     msg['From'] = sender
     msg['To'] = receiver
     msg['Subject'] = subject_line
 
     msg.attach(MIMEText(body,"plain"))
 
-
+    # Connect to the SMTP server and send the email
     try:
         with smtplib.SMTP("smtp.gmail.com",587) as my_server:
             my_server.starttls()

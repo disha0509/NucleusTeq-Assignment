@@ -9,6 +9,7 @@ from app.logging_config import logger
 
 router = APIRouter()
 
+#Admin- only creare Product
 @router.post("/", response_model=ProductOut, status_code=status.HTTP_201_CREATED)
 def create_product(
     product: ProductCreate,
@@ -27,6 +28,8 @@ def create_product(
     logger.info(f"Product created with ID: {new_product.id}")
     return new_product
 
+
+# Admin-only read products
 @router.get("/", response_model=List[ProductOut])
 def read_products(
     skip: int = Query(0, ge=0, description="Number of items to skip"),
@@ -44,7 +47,7 @@ def read_products(
     products = db.query(Product).filter(Product.is_deleted == False).offset(skip).limit(limit).all()
     return products
 
-@router.get("/{product_id}", response_model=ProductOut)
+# Admin-only read product detail by id
 @router.get("/{id}", response_model=ProductOut)
 def read_product_detail(
     id: int,
@@ -67,10 +70,12 @@ def read_product_detail(
     """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} reading product detail for ID: {id}")
     product = db.query(Product).filter(Product.id == id).first()
+    # Check if product exists and is not deleted
     if not product:
         from fastapi import HTTPException
         logger.warning(f"Product with ID {id} not found")
         raise HTTPException(status_code=404, detail="Product not found")
+    # Check if product is deleted
     if product.is_deleted:
         logger.warning(f"Product with ID {id} is deleted")
         raise HTTPException(status_code=404, detail="Product not found")
@@ -78,6 +83,7 @@ def read_product_detail(
 
 from fastapi import HTTPException
 
+# Admin-only update product
 @router.put("/{id}", response_model=ProductOut)
 def update_product(
     id: int,
@@ -91,9 +97,11 @@ def update_product(
     """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} updating product ID: {id}")
     product = db.query(Product).filter(Product.id == id).first()
+    # Check if product exists and is not deleted
     if not product or product.is_deleted:
         logger.warning(f"Product with ID {id} not found or is deleted for update")
         raise HTTPException(status_code=404, detail="Product not found")
+    # Check if the product was created by the admin
     if product.created_by != admin.id:
         raise HTTPException(status_code=403, detail="You can only update products you created.")
     for key, value in product_update.dict().items():
@@ -103,6 +111,8 @@ def update_product(
     logger.info(f"Product ID {id} updated")
     return product
 
+
+# Admin-only delete product
 @router.delete("/{id}", status_code=status.HTTP_200_OK)
 def delete_product(
     id: int,
@@ -115,9 +125,11 @@ def delete_product(
     """
     logger.info(f"Admin {admin.id if hasattr(admin, 'id') else ''} deleting product ID: {id}")
     product = db.query(Product).filter(Product.id == id).first()
+    # Check if product exists and is not deleted
     if not product or product.is_deleted:
         logger.warning(f"Product with ID {id} not found for deletion or is already deleted")
         raise HTTPException(status_code=404, detail="Product not found")
+    # Check if the product was created by the admin
     if product.created_by != admin.id:
         raise HTTPException(status_code=403, detail="You can only delete products you created.")
     product.is_deleted = True
@@ -128,6 +140,7 @@ def delete_product(
 public_router = APIRouter()
 
 
+# Public product listing with filters and pagination
 @public_router.get("/public", response_model=List[ProductOut], tags=["Public"])
 def public_product_listing(
     category: str = Query(None),
@@ -144,6 +157,7 @@ def public_product_listing(
     """
     logger.info(f"Public product listing: category={category}, min_price={min_price}, max_price={max_price}, sort_by={sort_by}, page={page}, page_size={page_size}")
     query = db.query(Product).filter(Product.is_deleted == False)  # Filter out deleted products
+    # Apply filters
     if category:
         query = query.filter(Product.category == category)
         if not db.query(Product).filter(Product.category == category, Product.is_deleted==False).first():
@@ -158,6 +172,8 @@ def public_product_listing(
     products = query.offset((page - 1) * page_size).limit(page_size).all()
     return products
 
+
+# Public product search by keyword
 @public_router.get("/public/search", response_model=List[ProductOut], tags=["Public"])
 def public_product_search(
     keyword: str = Query(..., min_length=1),
@@ -172,11 +188,14 @@ def public_product_search(
         (Product.name.ilike(f"%{keyword}%")) | (Product.description.ilike(f"%{keyword}%")) &
         (Product.is_deleted == False)  # Filter out deleted products
     ).all()
+    # Check if products were found
     if not products:  # <-- ADDED
         logger.warning(f"No products found for keyword '{keyword}'")
         raise HTTPException(status_code=404, detail=f"No products found for keyword '{keyword}'")
     return products
 
+
+# Public product detail by ID
 @public_router.get("/public/{id}", response_model=ProductOut, tags=["Public"])
 def public_product_detail(
     id: int,
@@ -188,6 +207,7 @@ def public_product_detail(
     """
     logger.info(f"Public product detail for ID: {id}")
     product = db.query(Product).filter(Product.id == id, Product.is_deleted==False).first()
+    # Check if product exists and is not deleted
     if not product:
         from fastapi import HTTPException
         logger.warning(f"Public product with ID {id} not found")

@@ -17,6 +17,9 @@ from app.logging_config import logger
 
 
 router = APIRouter()
+
+# User Authentication and Management Routes
+# This api is used for user signup
 @router.post("/signup", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 def signup(user: UserSignup,db: Session = Depends(get_db))-> UserOut:
     """
@@ -33,6 +36,7 @@ def signup(user: UserSignup,db: Session = Depends(get_db))-> UserOut:
         HTTPException: If the email already exists.
     """
     existing_user = db.query(User).filter(User.email == user.email).first()
+    # Check if the user already exists
     if existing_user:
         logger.warning(f"Signup failed: Email already exists for {user.email}")
         raise HTTPException(
@@ -51,7 +55,7 @@ def signup(user: UserSignup,db: Session = Depends(get_db))-> UserOut:
     return new_user
 
 
-
+# This api is used for user login
 @router.post("/login")
 def login(user_credentials:  OAuth2PasswordRequestForm=Depends(), db:  Session = Depends(get_db))-> dict:
     """
@@ -69,12 +73,14 @@ def login(user_credentials:  OAuth2PasswordRequestForm=Depends(), db:  Session =
     """
     logger.info(f"Login attempt for username: {user_credentials.username}")
     user = db.query(User).filter(User.email == user_credentials.username).first()
+    # Check if the user exists
     if not user:
         logger.warning(f"Login failed: User not found for {user_credentials.username}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
+    # Verify the password
     if not util.verify_password(user_credentials.password, user.password):
         logger.warning(f"Login failed: Incorrect password for {user_credentials.username}")
         raise HTTPException(
@@ -87,7 +93,7 @@ def login(user_credentials:  OAuth2PasswordRequestForm=Depends(), db:  Session =
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-
+# This api is used to get the details of the user
 @router.get("/getAllUsers", response_model=List[UserOut])
 def get_all_users(db:Session = Depends(get_db))-> List[UserOut]:
     """
@@ -104,6 +110,7 @@ def get_all_users(db:Session = Depends(get_db))-> List[UserOut]:
     """
     logger.info("Fetching all users")
     users = db.query(User).all()
+    # Check if users exist
     if not users:
         logger.warning("No users found!")
         raise HTTPException(status_code=404, detail="No users found!")
@@ -111,6 +118,7 @@ def get_all_users(db:Session = Depends(get_db))-> List[UserOut]:
     return users
 
 
+# This api is used for user forgot password functionality
 @router.post("/forgot-password")
 def secure_forgot_password(request: ForgotPassword, db: Session = Depends(get_db))-> dict:
     """
@@ -128,6 +136,7 @@ def secure_forgot_password(request: ForgotPassword, db: Session = Depends(get_db
     """
     logger.info(f"Password reset requested for email: {request.email}")
     user = db.query(User).filter(User.email == request.email).first()
+    # Check if the user exists
     if not user:
         logger.warning(f"Password reset failed: User not found for {request.email}")
         raise HTTPException(status_code=404, detail="User not found.")
@@ -136,7 +145,7 @@ def secure_forgot_password(request: ForgotPassword, db: Session = Depends(get_db
     reset_token = PasswordResetToken(token=token, user_id=user.id, expires_at=expires_at)
     db.add(reset_token)
     db.commit()
-
+    # Send the reset token to the user's email
     sender = "bundeladisha05@gmail.com"
     receiver = user.email
     receiver_name = user.name
@@ -149,6 +158,7 @@ def secure_forgot_password(request: ForgotPassword, db: Session = Depends(get_db
     return {"message": "Reset token created", "token": token}
 
 
+# This api is used for user password reset functionality
 @router.post("/reset-password")
 def secure_reset_password(request: ResetPassword, db: Session = Depends(get_db))-> dict:
     """
@@ -166,12 +176,13 @@ def secure_reset_password(request: ResetPassword, db: Session = Depends(get_db))
     """
     logger.info(f"Password reset attempt with token: {request.token}")
     token_entry = db.query(PasswordResetToken).filter(PasswordResetToken.token == request.token).first()
-
+    # Check if the token is valid and not expired
     if not token_entry or token_entry.expires_at < datetime.utcnow():
         logger.warning(f"Invalid or expired token used: {request.token}")
         raise HTTPException(status_code=400, detail="Invalid or expired token.")
 
     user = db.query(User).filter(User.id == token_entry.user_id).first()
+    # Check if the user exists
     if not user:
         logger.warning(f"Password reset failed: User not found for token {request.token}")
         raise HTTPException(status_code=404, detail="User not found.")

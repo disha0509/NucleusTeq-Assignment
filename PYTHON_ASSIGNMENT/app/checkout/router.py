@@ -10,6 +10,7 @@ from app.logging_config import logger
 
 router = APIRouter(tags=["checkout"])
 
+# Process the checkout for the current user
 @router.post("/", status_code=201)
 def checkout(
     db: Session = Depends(get_db),
@@ -21,19 +22,23 @@ def checkout(
     """
     logger.info(f"User {current_user.id} initiated checkout")
     cart_items = db.query(Cart).filter(Cart.user_id == current_user.id).all()
+    # Check if the cart is empty
     if not cart_items:
         logger.warning(f"Checkout failed: Cart is empty for user {current_user.id}")
         raise HTTPException(status_code=400, detail="Cart is empty")
     total = 0
     order_items = []
+    # Validate products and calculate total
     for item in cart_items:
         product = db.query(Product).filter(Product.id == item.product_id).first()
+        # Check if the product exists and is not deleted
         if not product or product.is_deleted:
             logger.warning(f"Product {item.product_id} is deleted or not found during checkout for user {current_user.id}")
             raise HTTPException(
                 status_code=400,
                 detail=f"Product with id {item.product_id} is not available for checkout."
             )
+        # Check if the requested quantity is available in stock
         if item.quantity > product.stock:
             logger.warning(f"Insufficient stock for product {product.id} (requested: {item.quantity}, available: {product.stock})")
             raise HTTPException(
@@ -47,6 +52,7 @@ def checkout(
             quantity=item.quantity,
             price_at_purchase=product.price
         ))
+    # Create the order and update product stock
         for item in cart_items:
             product = db.query(Product).filter(Product.id == item.product_id).first()
             product.stock -= item.quantity

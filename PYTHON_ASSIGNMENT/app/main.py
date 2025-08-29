@@ -20,9 +20,11 @@ from app.exception.handler import (
 
 app = FastAPI()
 
-
+# Initialize the database
 Base.metadata.create_all(bind = engine)
 
+
+#include routers
 app.include_router(user_router.router, prefix="/users", tags=["users"])
 app.include_router(product_router.router, prefix="/admin/products", tags=["products"])
 app.include_router(public_router, prefix="/products", tags=["public-products"])
@@ -30,10 +32,13 @@ app.include_router(cart_router.router, prefix="/cart", tags=["cart"])
 app.include_router(checkout_router.router, prefix="/checkout", tags=["checkout"])
 app.include_router(order_router.router, prefix="/orders", tags=["orders"])
 
+
+#include exception handlers
 app.add_exception_handler(HTTPException, custom_http_exception_handler)
 app.add_exception_handler(RequestValidationError, custom_validation_exception_handler)
 app.add_exception_handler(Exception, global_exception_handler)
 
+# Root endpoint
 @app.get("/")
 def root():
     return {"message" : "Welcome to the e-commerce Project Using FastAPI!"}
