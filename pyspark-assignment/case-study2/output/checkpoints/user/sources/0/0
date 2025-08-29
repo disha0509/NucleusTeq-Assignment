@@ -1,0 +1,3 @@
+v1
+{"path":"file:///C:/Users/disha/OneDrive/Documents/pyspark-practice/case-study2/input/logs1.csv","timestamp":1756499369220,"batchId":0}
+{"path":"file:///C:/Users/disha/OneDrive/Documents/pyspark-practice/case-study2/input/logs2.csv","timestamp":1756499387004,"batchId":0}

@@ -1,0 +1,3 @@
+Spark and Python are powerful
+Python and Spark are used in big data
+Big data needs Spark

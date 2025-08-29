@@ -1,0 +1,3 @@
+Spark makes big data processing easy.
+PySpark is the Python API for Spark.
+Big data is powerful and useful.

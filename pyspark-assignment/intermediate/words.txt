@@ -1,0 +1,5 @@
+Spark makes data processing fast
+Python and Spark are powerful
+Spark runs on clusters
+Data is the new oil
+Spark with Python is great for big data
